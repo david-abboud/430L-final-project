@@ -1,0 +1,679 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "defaultTitle",
+    "description": "defaultDescription",
+    "version": "0.1"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:5000"
+    }
+  ],
+  "paths": {
+    "/transaction": {
+      "get": {
+        "description": "Takes the token from the request, decodes it, and then uses the userid from the token to query the database for all transactions associated with that user",
+        "responses": {
+          "200": {
+            "description": "A list of transactions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "0": {
+                    "value": "[{\"added_date\":\"2022-03-22T02:57:19\",\"id\":7,\"lbp_amount\":13400.0,\"usd_amount\":1.0,\"usd_to_lbp\":true,\"user_id\":8},{\"added_date\":\"2022-03-22T03:04:38\",\"id\":8,\"lbp_amount\":13450.0,\"usd_amount\":1.0,\"usd_to_lbp\":true,\"user_id\":8},{\"added_date\":\"2022-03-22T03:19:23\",\"id\":21,\"lbp_amount\":14400.0,\"usd_amount\":1.0,\"usd_to_lbp\":true,\"user_id\":8},{\"added_date\":\"2022-03-22T05:13:37\",\"id\":24,\"lbp_amount\":14480.0,\"usd_amount\":1.0,\"usd_to_lbp\":true,\"user_id\":8},{\"added_date\":\"2022-03-22T20:18:20\",\"id\":44,\"lbp_amount\":17230.0,\"usd_amount\":1.0,\"usd_to_lbp\":true,\"user_id\":8},{\"added_date\":\"2022-03-22T20:18:40\",\"id\":45,\"lbp_amount\":17290.0,\"usd_amount\":1.0,\"usd_to_lbp\":true,\"user_id\":8},{\"added_date\":\"2022-03-29T00:22:19\",\"id\":49,\"lbp_amount\":17360.0,\"usd_amount\":1.0,\"usd_to_lbp\":true,\"user_id\":8},{\"added_date\":\"2022-03-29T03:47:19\",\"id\":51,\"lbp_amount\":17370.0,\"usd_amount\":1.0,\"usd_to_lbp\":true,\"user_id\":8},{\"added_date\":\"2022-03-29T21:43:50\",\"id\":64,\"lbp_amount\":17473.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":8},{\"added_date\":\"2022-03-30T14:09:56\",\"id\":65,\"lbp_amount\":17500.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":8},{\"added_date\":\"2022-04-07T17:44:42\",\"id\":67,\"lbp_amount\":18600.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":8},{\"added_date\":\"2022-04-07T17:44:50\",\"id\":68,\"lbp_amount\":18554.0,\"usd_amount\":1.0,\"usd_to_lbp\":true,\"user_id\":8}]\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "post": {
+        "description": "Creates a new transaction object, and then we're adding it to the database",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/transaction_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"usd_amount\":1,\n    \"lbp_amount\":15110,\n    \"usd_to_lbp\":0\n}"
+                },
+                "1": {
+                  "value": "{\n    \"usd_amount\":1,\n    \"lbp_amount\":15110,\n    \"usd_to_lbp\":0\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The transaction object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\"added_date\":\"2022-05-12T03:28:02\",\"id\":89,\"lbp_amount\":15110.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null}\n"
+                  },
+                  "1": {
+                    "value": "{\"added_date\":\"2022-05-12T03:28:26\",\"id\":90,\"lbp_amount\":15110.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":8}\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/exchangeRates": {
+      "get": {
+        "description": "Takes all the transactions from the database, and then creates two lists, one for the buy transactions and one for the sell transactions",
+        "responses": {
+          "200": {
+            "description": "A list of all buy transactions, and another of all sell transactions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_1"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\"transactions_buy\":[14300.0,14350.0,15110.0,15280.0,15410.0,15920.0,16020.0,16100.0,16300.0,16350.0,16910.0,17090.0,17290.0,17400.0,17450.0,17450.0,17490.0,17510.0,17460.0,17700.0,17473.0,17500.0,17600.0,18600.0,18400.0,21300.0,13000.0,25000.0,25000.0,26000.0],\"transactions_sell\":[12750.0,12750.0,12750.0,12770.0,12770.0,12770.0,13400.0,13450.0,14100.0,14400.0,14480.0,15420.0,15560.0,15780.0,16100.0,16370.0,16820.0,17020.0,17090.0,17230.0,17290.0,17300.0,17350.0,17360.0,17355.0,17370.0,17455.0,17480.0,17485.0,17720.0,18000.0,18554.0,19300.0,19580.0,20000.0,21000.0,21750.0,21500.0,13000.0,25000.0,13000.0,25000.0,25300.0]}\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/exchangeRate": {
+      "get": {
+        "description": "Gets all the transactions from the last 3 days, and calculates the average exchange rate for each USD to LBP and LBP to USD",
+        "responses": {
+          "200": {
+            "description": "JSON object with the average exchange rates for",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_2"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\"lbp_to_usd\":22060.0,\"usd_to_lbp\":20693.75}\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/wallet": {
+      "get": {
+        "description": "It takes the token from the request header, decodes it, and returns the user's wallet",
+        "responses": {
+          "200": {
+            "description": "The wallet_usd and wallet_lbp of the userimage.png",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_3"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\"wallet_lbp\":3789250.0,\"wallet_usd\":210.0}\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/user": {
+      "post": {
+        "description": "Takes a username and password from the request body, creates a new user object, adds it to the database",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"user_name\": \"dave\",\n    \"password\": \"dave1\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JSON object with the user's id and username",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_4"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\"id\":15,\"user_name\":\"dave\"}\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/authentication": {
+      "post": {
+        "description": "Takes a username and password from the request body, checks if the username exists in the database, and if it does, checks if the password matches the hashed password in the database. If it does, it creates a token and returns it",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/authentication_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"user_name\": \"dave\",\n    \"password\": \"dave1\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JSON object with the user's token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_5"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\"token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTI2NjEwNTQsImlhdCI6MTY1MjMxNTQ1NCwic3ViIjoxNX0.kqR_oOetk03B7Nt1l3uczDYAsk7sDJBGCygK6qPqtUk\"}\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/buyMarket": {
+      "post": {
+        "description": "The buyer buys the amount of USD or LBP from the seller, and the seller's wallet is updated accordingly",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/buyMarket_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"marketid\": 27\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "a string 'Succesfully bought'",
+            "content": {
+              "text/html; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {}
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/allBuyTransactions": {
+      "get": {
+        "description": "Fetches all the transactions where the user is buying Lebanese Pounds",
+        "responses": {
+          "200": {
+            "description": "A list of all the transactions that are buy (buy USD) transactions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "0": {
+                    "value": "[{\"added_date\":\"2022-03-22T03:48:15\",\"id\":22,\"lbp_amount\":14300.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-03-22T04:57:59\",\"id\":23,\"lbp_amount\":14350.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-03-22T05:14:11\",\"id\":25,\"lbp_amount\":15110.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":5},{\"added_date\":\"2022-03-22T05:14:21\",\"id\":26,\"lbp_amount\":15280.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":5},{\"added_date\":\"2022-03-22T05:14:34\",\"id\":27,\"lbp_amount\":15410.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":5},{\"added_date\":\"2021-03-20T05:14:22\",\"id\":31,\"lbp_amount\":15920.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-03-22T15:29:49\",\"id\":32,\"lbp_amount\":16020.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-03-22T15:34:38\",\"id\":34,\"lbp_amount\":16100.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-03-22T15:38:42\",\"id\":35,\"lbp_amount\":16300.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-03-22T17:03:55\",\"id\":36,\"lbp_amount\":16350.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2021-03-22T17:04:01\",\"id\":39,\"lbp_amount\":16910.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-03-22T19:37:46\",\"id\":42,\"lbp_amount\":17090.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-03-28T21:55:35\",\"id\":46,\"lbp_amount\":17290.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-03-29T03:56:52\",\"id\":52,\"lbp_amount\":17400.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-03-29T05:10:40\",\"id\":53,\"lbp_amount\":17450.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-03-29T05:11:26\",\"id\":54,\"lbp_amount\":17450.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-03-29T05:12:43\",\"id\":55,\"lbp_amount\":17490.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-03-29T05:14:48\",\"id\":56,\"lbp_amount\":17510.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-03-29T05:17:48\",\"id\":57,\"lbp_amount\":17460.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":5},{\"added_date\":\"2022-03-29T07:12:17\",\"id\":61,\"lbp_amount\":17700.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-03-29T21:43:50\",\"id\":64,\"lbp_amount\":17473.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":8},{\"added_date\":\"2022-03-30T14:09:56\",\"id\":65,\"lbp_amount\":17500.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":8},{\"added_date\":\"2022-03-30T15:06:55\",\"id\":66,\"lbp_amount\":17600.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-04-07T17:44:42\",\"id\":67,\"lbp_amount\":18600.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":8},{\"added_date\":\"2022-04-07T17:45:51\",\"id\":69,\"lbp_amount\":18400.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-05-09T20:30:03\",\"id\":75,\"lbp_amount\":21300.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":11},{\"added_date\":\"2022-05-10T20:51:11\",\"id\":79,\"lbp_amount\":13000.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-05-10T20:57:27\",\"id\":81,\"lbp_amount\":25000.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-05-10T21:27:29\",\"id\":83,\"lbp_amount\":25000.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null},{\"added_date\":\"2022-05-12T01:45:38\",\"id\":86,\"lbp_amount\":26000.0,\"usd_amount\":1.0,\"usd_to_lbp\":false,\"user_id\":null}]\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/market": {
+      "get": {
+        "description": "QUeries the database for all the rows in the Market table, and then returns the results in JSON format",
+        "responses": {
+          "200": {
+            "description": "A list of all the market listings in the database",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "0": {
+                    "value": "[{\"amount\":100000.0,\"marketid\":25,\"seller\":5,\"usd_to_lbp\":false},{\"amount\":12.0,\"marketid\":26,\"seller\":5,\"usd_to_lbp\":true}]\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "post": {
+        "description": "Allows a user to post his listing on the market feed. First checks if the seller has enough funds to do so, and if yes, deducts the listed price from the seller's wallet.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/market_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"amount\": 100000,\n    \"usd_to_lbp\": 0\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A JSON object with the market listing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_6"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\"amount\":100000.0,\"marketid\":27,\"seller\":15,\"usd_to_lbp\":false}\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/allSellTransactions": {
+      "get": {
+        "description": "It fetches all the transactions where the user is buying US Dollars",
+        "responses": {
+          "200": {
+            "description": "A list of all the transactions that are sell (sell USD) transactions"
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/stats": {
+      "get": {
+        "description": "Provides statistics about the exchange rate",
+        "responses": {
+          "200": {
+            "description": "JSON object with the medians, minimums and maximums, and stardard deviations of the buy and sell transactions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_7"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\"buy_median\":17425.0,\"max_buy\":26000.0,\"max_sell\":25300.0,\"min_buy\":13000.0,\"min_sell\":12750.0,\"sell_median\":17230.0,\"std_dev_buy\":3029.716177481309,\"std_dev_sell\":3367.0406883014857}\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    }
+  },
+  "components": {
+    "schemas": {
+      "user_body": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "user_name": {
+            "type": "string"
+          }
+        }
+      },
+      "inline_response_200_5": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "inline_response_200_6": {
+        "type": "object",
+        "properties": {
+          "seller": {
+            "type": "integer"
+          },
+          "usd_to_lbp": {
+            "type": "boolean"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "marketid": {
+            "type": "integer"
+          }
+        }
+      },
+      "inline_response_200_7": {
+        "type": "object",
+        "properties": {
+          "std_dev_buy": {
+            "type": "number"
+          },
+          "std_dev_sell": {
+            "type": "number"
+          },
+          "buy_median": {
+            "type": "number"
+          },
+          "sell_median": {
+            "type": "number"
+          },
+          "min_buy": {
+            "type": "number"
+          },
+          "min_sell": {
+            "type": "number"
+          },
+          "max_buy": {
+            "type": "number"
+          },
+          "max_sell": {
+            "type": "number"
+          }
+        }
+      },
+      "authentication_body": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "user_name": {
+            "type": "string"
+          }
+        }
+      },
+      "transaction_body": {
+        "type": "object",
+        "properties": {
+          "usd_to_lbp": {
+            "type": "integer"
+          },
+          "lbp_amount": {
+            "type": "integer"
+          },
+          "usd_amount": {
+            "type": "integer"
+          }
+        }
+      },
+      "inline_response_200_1": {
+        "type": "object",
+        "properties": {
+          "transactions_buy": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "transactions_sell": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "inline_response_200": {
+        "type": "object",
+        "properties": {
+          "usd_to_lbp": {
+            "type": "boolean"
+          },
+          "lbp_amount": {
+            "type": "number"
+          },
+          "added_date": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "usd_amount": {
+            "type": "number"
+          }
+        }
+      },
+      "inline_response_200_2": {
+        "type": "object",
+        "properties": {
+          "usd_to_lbp": {
+            "type": "number"
+          },
+          "lbp_to_usd": {
+            "type": "number"
+          }
+        }
+      },
+      "inline_response_200_3": {
+        "type": "object",
+        "properties": {
+          "wallet_usd": {
+            "type": "number"
+          },
+          "wallet_lbp": {
+            "type": "number"
+          }
+        }
+      },
+      "buyMarket_body": {
+        "type": "object",
+        "properties": {
+          "marketid": {
+            "type": "integer"
+          }
+        }
+      },
+      "inline_response_200_4": {
+        "type": "object",
+        "properties": {
+          "user_name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
+          }
+        }
+      },
+      "market_body": {
+        "type": "object",
+        "properties": {
+          "usd_to_lbp": {
+            "type": "integer"
+          },
+          "amount": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "http://yourauthurl.com",
+            "scopes": {
+              "scope_name": "Enter your scopes here"
+            }
+          }
+        }
+      }
+    }
+  }
+}
